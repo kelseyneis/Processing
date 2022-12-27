@@ -1,5 +1,5 @@
 examples/
-.DS_Store/
+.DS_Store
 templates/
 libraries/
 modes/
