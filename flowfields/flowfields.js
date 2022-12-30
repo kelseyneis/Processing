@@ -7,16 +7,19 @@ function setup() {
 
 let iter = 0;
 const noiseScale = .01;
-const num_steps = 5000; // controls how long the lines are
+const num_steps = 1000; // controls how long the lines are
 const step_length = .05; // controls how smooth the lines are
-const num_iter = 1000; // controls how many lines
+const num_iter = 10000; // controls how many lines
 const show_angles = false;
 const randomX = true; // if false, always start line at x = 0
 const randomY = true; // if false, always start line at y = 0
-const xfactor = 200; // number to multiply the randomGaussian x by
+const xfactor = 250; // number to multiply the randomGaussian x by
 const yfactor = 200; // number to multiply the randomGaussian y by
 const lineAlpha = 30;
 const lineWeight = 2;
+const redFactor = 255;
+const greenFactor = 255;
+const blueFactor = 0;
 
 function drawCurve(grid, resolution, x, y) {
     noFill();
@@ -24,7 +27,7 @@ function drawCurve(grid, resolution, x, y) {
     const noiseValGreen = noise((x+50)*noiseScale, (y+50)*noiseScale);
     const noiseValBlue = noise((x+100)*noiseScale, (y+100)*noiseScale);
 
-    stroke(noiseValRed*255, noiseValGreen*255, noiseValBlue*255, lineAlpha);
+    stroke(noiseValRed*redFactor, noiseValGreen*greenFactor, noiseValBlue*blueFactor, lineAlpha);
     strokeWeight(lineWeight);
     beginShape();
 
@@ -47,6 +50,7 @@ function drawCurve(grid, resolution, x, y) {
 }
 function draw() {
     if(iter > num_iter) {
+        console.log("Finished drawing.");
         noLoop();
     }
     const left_x = width * -0.5;
@@ -59,10 +63,8 @@ function draw() {
     const num_columns = round((right_x - left_x) / resolution);
     const num_rows = round((bottom_y - top_y) / resolution);
 
-//    const default_angle = Math.PI * 0.25;
 
     let grid = new Array(num_columns);
-
     // Set up 2D array
     for (let i = 0; i < grid.length; i++) {
         grid[i] = new Array(2);
@@ -72,7 +74,8 @@ function draw() {
     let angle;
     for (var i = 0; i < num_columns; i++) {
         for (let j = 0; j < num_rows; j++) {
-            angle = (j / num_rows) * Math.PI;
+            let dir = i < (num_columns / 2) ? 2 : 1;
+            angle = (i / num_columns) * Math.PI * dir;
             grid[i][j] = angle;
         }
     }
@@ -87,7 +90,6 @@ function draw() {
                 let vec2x = vec1.x + Math.cos(grid[i][j])*resolution;
                 let vec2y = vec1.y + Math.sin(grid[i][j])*resolution;
                 let vec2 = createVector(vec2x, vec2y);
-    //            circle(vec1.x, vec1.y, 2);
                 line(vec1.x, vec1.y, vec2.x, vec2.y);
             }
 
