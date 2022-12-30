@@ -7,9 +7,16 @@ function setup() {
 
 let iter = 0;
 const noiseScale = .01;
-const num_steps = 15000;
-const step_length = .05;
-const num_iter = 150;
+const num_steps = 5000; // controls how long the lines are
+const step_length = .05; // controls how smooth the lines are
+const num_iter = 1000; // controls how many lines
+const show_angles = false;
+const randomX = true; // if false, always start line at x = 0
+const randomY = true; // if false, always start line at y = 0
+const xfactor = 200; // number to multiply the randomGaussian x by
+const yfactor = 200; // number to multiply the randomGaussian y by
+const lineAlpha = 30;
+const lineWeight = 2;
 
 function drawCurve(grid, resolution, x, y) {
     noFill();
@@ -17,8 +24,8 @@ function drawCurve(grid, resolution, x, y) {
     const noiseValGreen = noise((x+50)*noiseScale, (y+50)*noiseScale);
     const noiseValBlue = noise((x+100)*noiseScale, (y+100)*noiseScale);
 
-    stroke(noiseValRed*255, noiseValGreen*255, noiseValBlue*255);
-    strokeWeight(1);
+    stroke(noiseValRed*255, noiseValGreen*255, noiseValBlue*255, lineAlpha);
+    strokeWeight(lineWeight);
     beginShape();
 
     for (let i=0; i < num_steps; i++) {
@@ -71,29 +78,30 @@ function draw() {
     }
 
     // Draw lines at angles in grid
-    stroke(50, 5);
-    strokeWeight(.5);
-    for (let i=0; i < num_columns; i++){
-        for (let j=0; j < num_rows; j++) {
-            let vec1 = createVector(i*resolution, j*resolution);
-            let vec2x = vec1.x + Math.cos(grid[i][j])*resolution;
-            let vec2y = vec1.y + Math.sin(grid[i][j])*resolution;
-            let vec2 = createVector(vec2x, vec2y);
-//            circle(vec1.x, vec1.y, 2);
-            line(vec1.x, vec1.y, vec2.x, vec2.y);
-        }
+    if (show_angles) {
+        stroke(50, 5);
+        strokeWeight(.5);
+        for (let i=0; i < num_columns; i++){
+            for (let j=0; j < num_rows; j++) {
+                let vec1 = createVector(i*resolution, j*resolution);
+                let vec2x = vec1.x + Math.cos(grid[i][j])*resolution;
+                let vec2y = vec1.y + Math.sin(grid[i][j])*resolution;
+                let vec2 = createVector(vec2x, vec2y);
+    //            circle(vec1.x, vec1.y, 2);
+                line(vec1.x, vec1.y, vec2.x, vec2.y);
+            }
 
+        }
     }
 
     // Draw a curve that approximately follows the angles in the grid
-//    let x = Math.abs(randomGaussian())*50;
-    let y = Math.abs(randomGaussian())*50;
-    let x = 0;
-//    let y = 50;
+    let x = randomX ? Math.abs(randomGaussian()) * xfactor : 0;
+    let y = randomY ? Math.abs(randomGaussian()) * yfactor : 50;
+
     
     drawCurve(grid, resolution, x, y)
     
-    y = height - Math.abs(randomGaussian())*150;
-    drawCurve(grid, resolution, x, y);
+//    y = height - Math.abs(randomGaussian())*150;
+//    drawCurve(grid, resolution, x, y);
     iter++;
 }
