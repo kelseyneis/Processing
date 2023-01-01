@@ -1,7 +1,9 @@
 examples/
 .DS_Store
 templates/
-libraries/
+*libraries/
 modes/
 tools/
-
+*js/
+*.min.js
+*.mp4
