@@ -1,6 +1,3 @@
-let isRecording = false; //assign as true when you want to record
-let firstFrame = 1; //choose a starting point to record
-let lastFrame = 125; //choose an ending point to finish recording
 let globe;
 const total  = 200;
 let a = 1;
@@ -10,7 +7,7 @@ let m2 = 0;
 let mchange = 0;
 let offset = 0;
 let angle = 45;
-var loopFrame = 180;
+var loopFrame = 90;
 
 let canvas;
 function supershape(theta, m, n1, n2, n3) {
@@ -31,10 +28,8 @@ function setup() {
 
 function draw() {
     capturer.capture(canvas);
-//    lights();
-//    m1 = map(Math.sin(mchange), -1, 1, 0, 5.7);
-    m1 = 0;
-//    mchange += .05;
+    m1 = map(Math.sin(mchange), -1, 1, 0, 5.7);
+    mchange += .05;
     camera(0, 0, (height/2) / tan(PI/6), 0, 0, 0, 0, 1, 0);
     scale(1.5);
     background(0);
@@ -48,7 +43,6 @@ function draw() {
     const r = 200;
 
     let globe = new Array(total+1);
-    // Set up 2D array
     for (let i = 0; i < total+1; i++) {
         globe[i] = new Array(2);
     }
@@ -73,8 +67,8 @@ function draw() {
     for( let i = 0; i < total; i++) {
      beginShape(LINES);
     for( let j = 0; j < total+1; j++) {
-//      let hu = map(j, 0, total, 0, 255*6);
-//      fill((hu + offset) % 255, 255, 255);
+      let hu = map(j, 0, total, 0, 255*6);
+      fill((hu + offset) % 255, 255, 255);
         let v1 = globe[i][j];
         let vec2x = v1.x + Math.cos(globe[i][j]);
         let vec2y = v1.y + Math.sin(globe[i][j]);
